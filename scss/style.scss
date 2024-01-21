@@ -1,0 +1,80 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  padding-top: 20px;
+  font-family: sans-serif;
+}
+
+button {
+  padding: 15px 30px;
+  border: 2px solid silver;
+  background: silver;
+  &:hover {
+    cursor: pointer;
+    background: transparent;
+    color: black;
+  }
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.app {
+  &__header {
+    border-bottom: 2px solid silver;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+  &__main {
+  }
+  &__footer {}
+}
+
+.img-block {
+  $imgBlockSize: 300px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  &__item {
+    width: $imgBlockSize;
+    height: $imgBlockSize;
+    min-width: $imgBlockSize;
+    min-height: $imgBlockSize;
+    margin: 5px;
+    padding: 5px;
+    box-shadow: 2px 2px 5px rgba(black, .3);
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox,
+.number-img {
+  padding: 15px;
+  width: 70px;
+}
+
+.select-breeds {
+  padding: 15px;
+}
+
+.select-breeds-block {
+  margin-left: 15px;
+}
