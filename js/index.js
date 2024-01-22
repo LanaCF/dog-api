@@ -8,6 +8,7 @@ const numImg = doc.querySelector('.number-img');
 const isBreedsSelectEl = doc.querySelector('.checkbox');
 let isBreedsSelect = false;
 const breedsSelectEl = doc.querySelector('.select-breeds');
+const breedOption = doc.querySelectorAll('.breed-option');
 
 const imgBlockEl = doc.querySelector('.img-block');
 
@@ -21,37 +22,35 @@ isBreedsSelectEl.onchange = (e) => {
 
 getDataBtn.onclick = () => {
   const numImgValue = numImg.value ? numImg.value : 0;
+  const selectedBreedValue = breedsSelectEl.value;
   const imgsRandomNum = imgsRandom + '/' + numImgValue;
-  console.log(numImgValue);
+  const imgsBreedRandomNum = baseUrl + 'breed/' + selectedBreedValue + '/images/random/' + numImgValue;
 
-  fetch(imgsRandomNum)
-    .then(res => {
-      console.log(res);
-      return res.json();
-    })
-    .then(data => {
-      const src = data.message;
+  if(!isBreedsSelect) {
+    fetch(imgsRandomNum)
+      .then(res => res.json())
+      .then(data => {
+        const src = data.message;
+        audit(src);
+      });
+  } else if (isBreedsSelect) {
+    fetch(imgsBreedRandomNum)
+      .then(res => res.json())
+      .then(data => {
+        const src = data.message;
+        audit(src);
+      });
+  } else {
+    const imgItem = 
+    `
+      <div class="img-block__item">
+        <p>Error! Select a breed.</p>
+      </div>
+    `;
 
-      if (numImgValue == 1) {
-        renderImg(src);
-      }
-
-      if (numImgValue > 1) {
-        renderImgs(src);
-      }
-
-      if (isNaN(numImgValue) || numImgValue <= 0) {
-        const imgItem = 
-          `
-            <div class="img-block__item">
-              <p>Error! Enter a number greater than 0.</p>
-            </div>
-          `;
-
-        imgBlockEl.innerHTML = '';
-        imgBlockEl.insertAdjacentHTML('afterbegin', imgItem);
-      }
-  });
+    imgBlockEl.innerHTML = '';
+    imgBlockEl.insertAdjacentHTML('afterbegin', imgItem);
+  }
 }
 
 function renderSelectBreeds() {
@@ -59,7 +58,7 @@ function renderSelectBreeds() {
     .then(res => res.json())
     .then(data => {
       let selectBreeds = '';
-
+      
       for (let item in data.message) {
         const breed = wordUpperCase(item);
 
@@ -70,16 +69,16 @@ function renderSelectBreeds() {
             const subBreed = wordUpperCase(data.message[item][i]);
             selectBreeds += 
             `
-              <option value="">${breed} ${subBreed}</option>
+              <option class="breed-option" value="${item}/${data.message[item][i]}">${breed} ${subBreed}</option>
             `;
           }
         } else {
           selectBreeds += 
           `
-            <option value="">${breed}</option>
+            <option class="breed-option" value="${item}">${breed}</option>
           `;
         }
-
+        
         breedsSelectEl.innerHTML = '';
         breedsSelectEl.insertAdjacentHTML('afterbegin', selectBreeds);
       };
@@ -126,4 +125,28 @@ function wordUpperCase(word) {
   const result = [first, ...rest].join("");
 
   return result;
+}
+
+function audit(src) {
+  const numImgValue = numImg.value ? numImg.value : 0;
+  
+  if (numImgValue == 1) {
+    renderImg(src);
+  }
+
+  if (numImgValue > 1) {
+    renderImgs(src);
+  }
+
+  if (isNaN(numImgValue) || numImgValue <= 0) {
+    const imgItem = 
+      `
+        <div class="img-block__item">
+          <p>Error! Enter a number greater than 0.</p>
+        </div>
+      `;
+
+    imgBlockEl.innerHTML = '';
+    imgBlockEl.insertAdjacentHTML('afterbegin', imgItem);
+  }
 }
